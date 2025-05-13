@@ -82,7 +82,7 @@ def _load_renderings_transient_real(root_fp: str, subject_id: str, split: str, h
     z = torch.arange(n_bins*2, device="cpu").float()
     X, Y, Z = torch.meshgrid(x, y, z, indexing="xy")
     Z = Z*exposure_time/2
-    Z = Z - shift[0]
+    Z = Z - shift
     Z = Z*2/exposure_time
     Z = (Z-n_bins*2//2+0.5)/(n_bins*2//2-0.5)
     grid = torch.stack((Z, X, Y), dim=-1)[None, ...]
@@ -157,7 +157,6 @@ class SubjectLoaderTransientReal(torch.utils.data.Dataset):
 
     # WIDTH, HEIGHT = 64, 64
     NEAR, FAR = 0, 6
-    OPENGL_CAMERA = True
 
     def __init__(
             self,
@@ -283,8 +282,6 @@ class SubjectLoaderTransientReal(torch.utils.data.Dataset):
             num_rays = self.num_rays
         if rep==None:
             rep = self.rep
-        
-
 
         if self.training:
             if self.batch_over_images:

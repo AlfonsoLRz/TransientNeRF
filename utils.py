@@ -361,7 +361,7 @@ def load_args(eval = False, parser= None):
     parser.add_argument(
         "--device",
                 type=str,
-                default="cuda:7",
+                default="cuda:0",
         help="Device.",
     )
     parser.add_argument("--cone_angle", type=float, default=0.0)
@@ -370,7 +370,7 @@ def load_args(eval = False, parser= None):
 
 def make_save_folder(args):
     now = datetime.now()
-    now = now.strftime("%m-%d_%H:%M:%S")
+    now = now.strftime("%m-%d_%H%M%S")
     exp_name = args.exp_name + "_" + now
     outpath = os.path.join(args.outpath, exp_name)
     os.mkdir(outpath)

@@ -46,8 +46,14 @@ def get_gt_depth(frame, camtoworld, data_root_fp):
 @torch.no_grad()
 def eval():
     args = load_eval_args()
-    device = args.device
 
+    args.version = 'simulated'
+    args.scene = 'ficus'
+    args.checkpoint_dir = 'results/ficus_05-13_153141'
+    args.test_folder_path = 'C:/Datasets/transient_nerf/ficus'
+    args.step = 10000
+
+    device = args.device
     ckpt_dir = args.checkpoint_dir
 
     # settings

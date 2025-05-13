@@ -32,10 +32,18 @@ def run():
     args = load_args()
     device = args.device
     set_random_seed(args.seed)
+
+    args.data_root_fp = 'C:/Datasets/transient_nerf/ficus'
+    args.exp_name = 'ficus'
+    args.my_config = './configs/train/simulated/ficus_two_views.ini'
+    args.pulse_path= 'C:/Datasets/transient_nerf/pulse_low_flux.mat'
+    args.intrinsics = 'C:/Datasets/transient_nerf/ficus'
+    args.final = False
+    args.max_steps = 10000
+    args.steps_til_checkpoint = 1000
     
     outpath = os.path.join(args.outpath, args.exp_name)
 
-    
     aabb = torch.tensor(args.aabb, dtype=torch.float32, device=device)
     train_dataset_kwargs = {}
     test_dataset_kwargs = {}
@@ -257,7 +265,6 @@ def run():
         scheduler.step()
 
         writer.add_scalar('Loss/train', loss.detach().cpu().numpy(), step)
-
         if not step % args.steps_til_checkpoint:
             torch.save(radiance_field.state_dict(), os.path.join(outpath, 'radiance_field_%04d.pth' % (step)))
             torch.save(occupancy_grid.state_dict(), os.path.join(outpath, 'occupancy_grid_%04d.pth' % (step)))
@@ -265,10 +272,8 @@ def run():
             torch.save(scheduler.state_dict(), os.path.join(outpath, 'scheduler_%04d.pth' % (step)))
             torch.save({'step': step, "rays_per_pixel":train_dataset.rep}, os.path.join(outpath, 'variables.pth'))
 
-
         if not step % 1000:
             write_summary_histogram(radiance_field, occupancy_grid, writer, test_dataset, step, render_step_size, args)
-
 
         if step == max_steps:
             print("training stops")
